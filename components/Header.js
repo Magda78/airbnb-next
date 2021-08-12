@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { SearchIcon, MenuIcon, GlobeAltIcon, UserCircleIcon, UserIcon } from '@heroicons/react/solid';
 import 'react-date-range/dist/styles.css'; // main style file
@@ -13,6 +13,7 @@ function Header({placeholder}) {
 	const [ startDate, setStartDate ] = useState(new Date());
 	const [ endDate, setEndDate ] = useState(new Date());
 	const [ guests, setGuests ] = useState(1);
+	const [ navBackground, setNavBackground ] = useState(false);
 	const router = useRouter();
 
 	const inputHandler = () => {
@@ -52,8 +53,23 @@ function Header({placeholder}) {
 		console.log(startDate,endDate)
 	}
 
+	useEffect(()=>{
+		const scrollHandler = () => {
+			if(window.scrollY <= 100) {
+				setNavBackground(false)
+			}
+			else {
+				setNavBackground(true)
+			}
+			console.log(window.scrollY)
+		}
+		window.addEventListener('scroll', scrollHandler)
+		return () => window.removeEventListener('scroll', scrollHandler)
+		},[])
+	
+
 	return (
-		<header className="sticky top-0 z-50 grid grid-cols-3 py-5 px-5 md:px-10">
+		<header className={`sticky top-0 z-50 grid grid-cols-3 py-5 px-5 md:px-10 ${navBackground ? 'bg-white' : 'bg-transparent'}`}>
 			<div className="relative flex items-center h-10 cursor-pointer my-auto" onClick={() => router.push('/')}>
 				<Image src="https://links.papareact.com/qd3" layout="fill" objectFit="contain" objectPosition="left" />
 			</div>
